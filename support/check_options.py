@@ -15,7 +15,7 @@ for line in optionsfile:
         option = m.group('option')
         function = m.group('function')
         if function != 'f_yesno_arg':
-            option = '-' + option
+            option = f'-{option}'
         parsed_options.append(option)
     # accept_prefix() takes s as first argument
     for m in re.finditer('accept_prefix\s*\([^,]*,\s*"(?P<option>[^"]+)', line):
@@ -30,9 +30,7 @@ regex = '(?P<function>' + "|".join(functions) + ')'
 regex += '\s*\(\s*"(?P<option>[^"]+)"'
 help_options = []
 for line in helpfile:
-    for m in re.finditer(regex, line):
-        help_options.append(m.group('option'))
-
+    help_options.extend(m.group('option') for m in re.finditer(regex, line))
 # See which options lack a help string
 found_a_problem = False
 
